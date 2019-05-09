@@ -290,7 +290,6 @@ class WaveHeightRegressor:
             numpy array
         """
         data = df.drop(['hsALT', 'hsWW3v2', 'hsSM', 'altID', 'target'], axis=1).values
-        print(df.loc[:,'hsALT'])
         preds = self.ann.predict(data)
 
         return preds[:, 0]
