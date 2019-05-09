@@ -12,7 +12,7 @@
 ## Dependencies
 - Python 3.6.8
 - 'numpy': '1.16.2',
-- 'sklearn': '0.19.2',
+- 'sklearn': '0.20.3',
 - 'pandas': '0.23.4',
 - 'keras': '2.2.4',
 - 'tensorflow': '1.11.0',
