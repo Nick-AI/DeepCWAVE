@@ -27,7 +27,8 @@ class WaveHeightRegressor:
         np.random.seed(13)
         self.mdl_weights = mdl_weights
         self.ann = self._get_network()
-
+        self.REM_COLS = ['hsSM', 'hsWW3v2', 'hsALT', 'altID', 'lonALTCos', 'lonALTSin', 'wsALT', 'todALT', 'latALTCos',
+                         'latALTSin', 'target']
     @staticmethod
     def _conv_time(in_t):
         """Converts data acquisition time
@@ -238,7 +239,7 @@ class WaveHeightRegressor:
         Returns:
             Keras Sequential() instance
         """
-        inp = Input(shape=(38,))  # 'hsSM', 'hsWW3v2', 'hsALT', 'altID', 'target' -> dropped
+        inp = Input(shape=(32,))  # 'hsSM', 'hsWW3v2', 'hsALT', 'altID', 'target' -> dropped
         x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(inp)
         x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
         x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
@@ -251,7 +252,6 @@ class WaveHeightRegressor:
         x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
         x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
         x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
-        x = Dropout(0.5)(x)
         x = Dense(2, activation='linear', kernel_initializer='zeros', bias_initializer='zeros')(x)
 
         x_mu = Lambda(lambda x: x[:, :1])(x)
@@ -272,7 +272,7 @@ class WaveHeightRegressor:
         nll.__name__ = 'negative_log_loss'
         loss = nll
 
-        lr = 0.003
+        lr = 0.002
         opt = Adam(lr=lr, clipvalue=1.)
 
         ann = Model(inputs=inp, outputs=net_out)
@@ -289,7 +289,7 @@ class WaveHeightRegressor:
         Returns:
             numpy array
         """
-        data = df.drop(['hsALT', 'hsWW3v2', 'hsSM', 'altID', 'target'], axis=1).values
+        data = df.drop(self.REM_COLS, axis=1).values
         preds = self.ann.predict(data)
 
         return preds[:, 0]

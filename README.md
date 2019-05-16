@@ -6,7 +6,7 @@
 - Don't use the weights argument yet, there's currently only one model anyway
 - Call format: `python RunModel.py [-h] [--outdir OUTDIR] [--weights WEIGHTS] input`
 - Calling `python RunModel.py -h` will give you more information about the arguments
-- Sample call: `python RunModel.py /path/to/data/S1A_ALT_coloc201701S.nc -outdir /path/to/destination/`
+- Sample call: `python RunModel.py /path/to/data/S1A_ALT_coloc201701S.nc --outdir /path/to/destination/`
   - This will read `/path/to/data/S1A_ALT_coloc201701S.nc` and produce an output file at `/path/to/destination/S1A_ALT_coloc201701S_preds.csv`
 
 ## Dependencies
