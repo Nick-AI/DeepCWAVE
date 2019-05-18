@@ -240,17 +240,17 @@ class WaveHeightRegressor:
             Keras Sequential() instance
         """
         inp = Input(shape=(32,))  # 'hsSM', 'hsWW3v2', 'hsALT', 'altID', 'target' -> dropped
-        x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(inp)
-        x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
-        x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
-        x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
-        x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
-        x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
-        x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
-        x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
-        x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
-        x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
-        x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
+        x = Dense(units=256, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(inp)
+        x = Dense(units=256, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
+        x = Dense(units=256, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
+        x = Dense(units=256, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
+        x = Dense(units=256, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
+        x = Dense(units=256, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
+        x = Dense(units=256, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
+        x = Dense(units=256, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
+        x = Dense(units=256, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
+        x = Dense(units=256, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
+        x = Dense(units=256, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
         x = Dense(units=64, activation='relu', kernel_initializer='he_uniform', bias_initializer='zeros')(x)
         x = Dense(2, activation='linear', kernel_initializer='zeros', bias_initializer='zeros')(x)
 
@@ -272,7 +272,7 @@ class WaveHeightRegressor:
         nll.__name__ = 'negative_log_loss'
         loss = nll
 
-        lr = 0.002
+        lr = 0.0025
         opt = Adam(lr=lr, clipvalue=1.)
 
         ann = Model(inputs=inp, outputs=net_out)
