@@ -280,7 +280,7 @@ class WaveHeightRegressor:
         ann.load_weights(self.mdl_weights)
         return ann
 
-    def _get_preds(self, df):
+    def _get_preds(self, df, withSig=True):
         """Get model predictions for fully pre-processed dataframe
 
         Args:
@@ -292,9 +292,12 @@ class WaveHeightRegressor:
         data = df.drop(self.REM_COLS, axis=1).values
         preds = self.ann.predict(data)
 
+        if withSig:
+            return preds
+
         return preds[:, 0]
 
-    def est_hs(self, in_dir):
+    def est_hs(self, in_dir, withSig=True):
         """Full data pipeline. Loads data from netcdf -> preprocesses -> gets predictions -> returns values
 
         Args:
@@ -305,7 +308,11 @@ class WaveHeightRegressor:
         """
         data = self._form_data(in_dir)
         predictions = self._get_preds(data)
-        out = pd.DataFrame(predictions)
+        if withSig:
+            out = pd.DataFrame({'hsMean': predictions[:,0], 'hsSig': predictions[:,1]})
+        else:
+            out = pd.DataFrame(predictions)
+
         return out
 
 
