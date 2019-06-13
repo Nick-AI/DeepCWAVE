@@ -45,7 +45,7 @@ class WaveHeightRegressor:
     @staticmethod
     def _conv_deg(in_angle, is_inverse=False, in_cos=None, in_sin=None):
         """Converts measurements in degrees (e.g. angles), using encoding proposed at https://stats.stackexchange.com/a/218547
-           Encode each angle as tuple theta as tuple (cos(theta), sin(theta)), for justification, see graph at bottom
+           Encode each angle theta as tuple (cos(theta), sin(theta))
 
         Args:
             coord: measurement of lat/ long in degrees
