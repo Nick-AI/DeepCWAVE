@@ -27,8 +27,7 @@ class WaveHeightRegressor:
         np.random.seed(13)
         self.mdl_weights = mdl_weights
         self.ann = self._get_network()
-        self.REM_COLS = ['hsSM', 'hsWW3v2', 'hsALT', 'altID', 'lonALTCos', 'lonALTSin', 'wsALT', 'todALT', 'latALTCos',
-                         'latALTSin', 'target']
+        self.REM_COLS = ['hsSM', 'hsWW3v2']
     @staticmethod
     def _conv_time(in_t):
         """Converts data acquisition time
@@ -83,8 +82,8 @@ class WaveHeightRegressor:
         """
         tmp_df = pd.DataFrame()
         ncdf_data = Dataset(source_file, 'r')
-        var_keys = ['timeSAR', 'timeALT', 'lonSAR', 'lonALT', 'latSAR', 'latALT', 'hsALT', 'wsALT', 'dx', 'dt', 'nk',
-                    'hsSM', 'incidenceAngle', 'sigma0', 'normalizedVariance', 'S', 'hsWW3v2', 'altID']
+        var_keys = ['timeSAR', 'lonSAR', 'latSAR', 'nk', 'hsSM', 'incidenceAngle', 'sigma0', 'normalizedVariance', 'S',
+                    'hsWW3v2']
         time_transf = np.vectorize(self._conv_time)
         coord_transf = np.vectorize(self._conv_deg)
         incAng_transf = np.vectorize(self._conv_incAng)
@@ -122,8 +121,8 @@ class WaveHeightRegressor:
     def _get_from_csv(self, source_file):
         tmp_df = pd.DataFrame()
         src_data = pd.read_csv(source_file)
-        var_keys = ['timeSAR', 'timeALT', 'lonSAR', 'lonALT', 'latSAR', 'latALT', 'hsALT', 'wsALT', 'dx', 'dt', 'nk',
-                    'hsSM', 'incidenceAngle', 'sigma0', 'normalizedVariance', 'S', 'hsWW3v2', 'altID', 'fileName']
+        var_keys = ['timeSAR', 'lonSAR', 'latSAR', 'nk', 'hsSM', 'incidenceAngle', 'sigma0', 'normalizedVariance', 'S',
+                    'hsWW3v2']
         time_transf = np.vectorize(self._conv_time)
         coord_transf = np.vectorize(self._conv_deg)
         incAng_transf = np.vectorize(self._conv_incAng)
@@ -204,7 +203,7 @@ class WaveHeightRegressor:
             pandas dataframe containing fully preprocessed data
         """
         df = self._load_data(source_file)
-        norm_cols = ['wsALT', 'dx', 'dt', 'sigma0', 'normalizedVariance']
+        norm_cols = ['sigma0', 'normalizedVariance']
         norm_cols += ['s' + str(idx) for idx in range(20)]
         for col in norm_cols:
             s_scaler = joblib.load(f'./models/scalerModels/{col}.scl')
@@ -227,7 +226,6 @@ class WaveHeightRegressor:
         out_df.sort_values(by=['idx'], inplace=True)
         out_df['dt'] = 0
         out_df['dx'] = 0
-        out_df['target'] = out_df['hsALT']
 
         out_df.drop(['idx'], axis=1, inplace=True)
 
