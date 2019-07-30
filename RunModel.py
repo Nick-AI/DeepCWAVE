@@ -17,7 +17,7 @@ from netCDF4 import Dataset
 from keras.optimizers import Adam
 from keras.models import Model
 from keras.layers import Input, Dense, Lambda, Activation, Concatenate, Dropout
-from sklearn.externals import joblib
+import joblib
 sys.stderr = stderr
 from functools import partial, update_wrapper
 
