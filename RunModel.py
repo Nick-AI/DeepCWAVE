@@ -121,8 +121,8 @@ class WaveHeightRegressor:
     def _get_from_csv(self, source_file):
         tmp_df = pd.DataFrame()
         src_data = pd.read_csv(source_file)
-        var_keys = ['timeSAR', 'lonSAR', 'latSAR', 'nk', 'hsSM', 'incidenceAngle', 'sigma0', 'normalizedVariance', 'S',
-                    'hsWW3v2']
+        var_keys = ['timeSAR', 'lonSAR', 'latSAR', 'dx', 'dt', 'nk', 'hsSM', 'incidenceAngle', 'sigma0',
+                    'normalizedVariance', 'S', 'hsWW3v2']
         time_transf = np.vectorize(self._conv_time)
         coord_transf = np.vectorize(self._conv_deg)
         incAng_transf = np.vectorize(self._conv_incAng)
@@ -152,6 +152,8 @@ class WaveHeightRegressor:
                 tmp_df['year'] = year_transf(src_data.loc[:, key].values)
                 tmp_df['month'] = month_transf(src_data.loc[:, key].values)
                 tmp_df['sentinelType'] = sentType_transf(src_data.loc[:, key].values)
+            elif key == 'dx' or key == 'dt':
+                tmp_df[key] = 0
             else:
                 tmp_df[key] = src_data.loc[:, key].values
 
