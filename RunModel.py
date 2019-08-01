@@ -27,7 +27,8 @@ class WaveHeightRegressor:
         np.random.seed(13)
         self.mdl_weights = mdl_weights
         self.ann = self._get_network()
-        self.REM_COLS = ['hsSM', 'hsWW3v2']
+        self.REM_COLS = ['hsSM']
+
     @staticmethod
     def _conv_time(in_t):
         """Converts data acquisition time
@@ -82,8 +83,8 @@ class WaveHeightRegressor:
         """
         tmp_df = pd.DataFrame()
         ncdf_data = Dataset(source_file, 'r')
-        var_keys = ['timeSAR', 'lonSAR', 'latSAR', 'nk', 'hsSM', 'incidenceAngle', 'sigma0', 'normalizedVariance', 'S',
-                    'hsWW3v2']
+        var_keys = ['timeSAR', 'lonSAR', 'latSAR', 'dx', 'dt', 'hsSM', 'incidenceAngle', 'sigma0', 'normalizedVariance',
+                    'S']
         time_transf = np.vectorize(self._conv_time)
         coord_transf = np.vectorize(self._conv_deg)
         incAng_transf = np.vectorize(self._conv_incAng)
@@ -97,6 +98,8 @@ class WaveHeightRegressor:
                     tmp_df['s' + str(idx)] = tmp[:, idx]
             elif key == 'timeSAR':
                 tmp_df['todSAR'] = time_transf(np.array(ncdf_data[key][:]))
+            elif key in ['dx', 'dt']:
+                tmp_df[key] = 0
             elif key == 'timeALT':
                 tmp_df['todALT'] = time_transf(np.array(ncdf_data[key][:]))
             elif key in ['lonSAR', 'lonALT', 'latSAR', 'latALT']:
@@ -109,14 +112,9 @@ class WaveHeightRegressor:
                 tmp_df['incidenceAngleMode'] = lbl
             else:
                 tmp_df[key] = ncdf_data[key][:]
-        tmp_df['sentinelType'] = int(
-            source_file.split('/')[-1].split('_')[0][2] == 'A')  # encodes type A as 1 and B as 0
+        tmp_df['sentinelType'] = int(source_file.split('/')[-1].split('_')[0][2] == 'A')  # encodes type A as 1, B as 0
 
-        # removes all rows with nk!=60
-        final_df = tmp_df.loc[tmp_df['nk'] == 60]
-        final_df.drop(['nk'], axis=1, inplace=True)
-
-        return final_df
+        return tmp_df
 
     def _get_from_csv(self, source_file):
         tmp_df = pd.DataFrame()
@@ -291,6 +289,8 @@ class WaveHeightRegressor:
         """
         data = df.drop(self.REM_COLS, axis=1).values
         preds = self.ann.predict(data)
+        thresh_indices = preds[:, 0] < 0.0
+        preds[thresh_indices, 0] = 0
 
         if withSig:
             return preds
